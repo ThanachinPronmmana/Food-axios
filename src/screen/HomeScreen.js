@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList, TouchableOpacity,Text} from "react-native";
 import axios from "axios";
 import SearchBox from "./compotents/SearchBox";
 import RecipeCard from "./compotents/RecipeCard";
@@ -25,12 +25,15 @@ const HomeScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+            
             <SearchBox
-                placeholder="Search recipes..."
+                placeholder="Search recipes..." 
                 value={search}
                 onChangeText={(value) => setSearch(value)}
             />
-
+            <TouchableOpacity onPress={()=>navigation.navigate("Fav")}>
+                <Text style={styles.Textfav}>Favorites</Text>
+            </TouchableOpacity>
             <FlatList
                 data={recipes.filter((recipe) =>
                     recipe.strMeal.toLowerCase().includes(search.toLowerCase())
