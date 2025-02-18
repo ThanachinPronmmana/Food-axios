@@ -32,7 +32,7 @@ const HomeScreen = ({ navigation }) => {
                 onChangeText={(value) => setSearch(value)}
             />
             <TouchableOpacity onPress={()=>navigation.navigate("Fav")}>
-                <Text style={styles.Textfav}>Favorites</Text>
+                <Text style={styles.Textfav}>Favorites</Text>   
             </TouchableOpacity>
             <FlatList
                 data={recipes.filter((recipe) =>

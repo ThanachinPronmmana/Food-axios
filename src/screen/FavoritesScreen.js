@@ -20,6 +20,7 @@ const FavoritesScreen = () =>{
     return(
         <View style={styles.container}>
           <FlatList
+          
           data={favorites}
           keyExtractor={(item)=>item.idMeal}
           renderItem={({item})=>(
@@ -35,7 +36,7 @@ const FavoritesScreen = () =>{
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        alignItems:"center",
+        alignItems:"flex-start",
         padding:10,
         backgroundColor:"#fff"
 
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
     Imagemeal:{
         width:60,
         height:60,
-        borderRadius:10
+        borderRadius:10,
     }
 })
 export default FavoritesScreen
