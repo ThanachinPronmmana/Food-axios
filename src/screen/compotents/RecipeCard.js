@@ -1,17 +1,22 @@
 import React from "react";
-import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 
-const RecipeCard = ({ recipe, onPress }) => {
+const RecipeCard = ({ recipe, onPress, onToggleFavorite, favorites }) => {
+    const isFavorite = favorites.some((fav)=>fav.idMeal === recipe.idMeal)
+
     return (
-        <TouchableOpacity style={styles.card} onPress={onPress}>
-            <Image style={styles.image} source={{ uri: recipe.strMealThumb }} />
-            <View style={styles.container}>
+        <TouchableOpacity onPress={onPress} style={styles.card}>
+            <Image source={{ uri: recipe.strMealThumb }} style={styles.image} />
+            <View style={styles.textContainer}>
                 <Text style={styles.title}>{recipe.strMeal}</Text>
-                <View style={styles.content}>
-                    <Text style={styles.category}>{recipe.strCategory}</Text>
-                    <MaterialIcons name="arrow-forward-ios" size={14} color="#777" />
-                </View>
+                <TouchableOpacity onPress={onToggleFavorite}>
+                    <MaterialIcons 
+                        name={isFavorite ? "favorite" : "favorite-border"} 
+                        size={24} 
+                        color={isFavorite ? "red" : "gray"} 
+                    />
+                </TouchableOpacity>
             </View>
         </TouchableOpacity>
     );
@@ -21,43 +26,29 @@ const styles = StyleSheet.create({
     card: {
         flexDirection: "row",
         backgroundColor: "#fff",
-        borderRadius: 12,
-        width: "95%",
-        alignSelf: "center",
-        marginVertical: 8,
-        padding: 16,
-        minHeight: 120,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 4,
-        alignItems: "flex-start",
+        borderRadius: 10,
+        marginBottom: 10,
+        overflow: "hidden",
+        elevation: 3,
+        alignItems: "center",
+        padding: 10,
     },
     image: {
-        borderRadius: 8,
-        width: 100,
-        height: 100,
+        width: 80,
+        height: 80,
+        borderRadius: 10,
     },
-    container: {
+    textContainer: {
         flex: 1,
-        paddingLeft: 16,
-        justifyContent: "center",
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: "bold",
-        color: "#333",
-        marginBottom: 6,
-    },
-    content: {
+        paddingLeft: 10,
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
     },
-    category: {
+    title: {
         fontSize: 16,
-        color: "#666",
+        fontWeight: "bold",
+        flexShrink: 1,
     },
 });
 

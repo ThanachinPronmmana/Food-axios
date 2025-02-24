@@ -22,7 +22,7 @@ const App = () => {
       }}>
         <Stack.Screen name="Home" component={HomeScreen} 
         options={{
-          title:"Cum"
+          title:"Welcome"
         }}
         />
         <Stack.Screen name="Recip" component={RecipeDetailScreen} 

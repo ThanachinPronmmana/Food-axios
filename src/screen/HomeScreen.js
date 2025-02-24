@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, FlatList, TouchableOpacity,Text} from "react-native";
+import { View, StyleSheet, FlatList, TouchableOpacity, Text } from "react-native";
 import axios from "axios";
 import SearchBox from "./compotents/SearchBox";
 import RecipeCard from "./compotents/RecipeCard";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const HomeScreen = ({ navigation }) => {
     const [search, setSearch] = useState("");
     const [recipes, setRecipes] = useState([]);
+    const [favorites, setFavorites] = useState([]);
 
     useEffect(() => {
         fetchRecipes();
+        loadFavorites();
     }, []);
 
     const fetchRecipes = async () => {
@@ -23,16 +27,34 @@ const HomeScreen = ({ navigation }) => {
         }
     };
 
+    const loadFavorites = async () => {
+        try {
+            const storedFavorites = await AsyncStorage.getItem("favorites");
+            if (storedFavorites) {
+                setFavorites(JSON.parse(storedFavorites));
+            }
+        } catch (error) {
+            console.error("Error loading favorites", error);
+        }
+    };
+
+    const toggleFavorite = async (recipe) => {
+        const updatedFavorites = favorites.some((fav) => fav.idMeal === recipe.idMeal)
+            ? favorites.filter((fav) => fav.idMeal !== recipe.idMeal)
+            : [...favorites, recipe];
+        setFavorites(updatedFavorites);
+        await AsyncStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+    };
+
     return (
         <View style={styles.container}>
-            
             <SearchBox
-                placeholder="Search recipes..." 
+                placeholder="Search recipes..."
                 value={search}
                 onChangeText={(value) => setSearch(value)}
             />
-            <TouchableOpacity onPress={()=>navigation.navigate("Fav")}>
-                <Text style={styles.Textfav}>Favorites</Text>   
+            <TouchableOpacity onPress={() => navigation.navigate("Fav")}> 
+                <Text style={styles.Textfav}>Favorites</Text>
             </TouchableOpacity>
             <FlatList
                 data={recipes.filter((recipe) =>
@@ -43,7 +65,10 @@ const HomeScreen = ({ navigation }) => {
                     <RecipeCard
                         recipe={item}
                         onPress={() => navigation.navigate("Recip", { recipe: item })}
-                    />
+                        favorites={favorites}
+                        onToggleFavorite={()=>toggleFavorite(item)}
+                    >
+                    </RecipeCard>
                 )}
             />
         </View>
@@ -54,6 +79,12 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 10,
+    },
+    Textfav: {
+        fontSize: 18,
+        fontWeight: "bold",
+        textAlign: "center",
+        marginBottom: 10,
     },
 });
 
